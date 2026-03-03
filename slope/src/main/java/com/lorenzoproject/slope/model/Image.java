@@ -1,32 +1,39 @@
 package com.lorenzoproject.slope.model;
 
-import com.lorenzoproject.slope.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Blob;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class SkiRun {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String type;
-    private Status status;
+    private String fileName;
+    private String fileType;
+
+    @Lob
+    private Blob image;
+    private String downloadURL;
 
     @ManyToOne
     @JoinColumn(name = "ski_facility_id")
     private SkiFacility skiFacility;
 
-    @OneToMany(mappedBy = "skiRun", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "ski_run_id")
+    private SkiRun skiRun;
+
+    @ManyToOne
+    @JoinColumn(name = "lift_structure_id")
+    private LiftStructure liftStructure;
+
 }

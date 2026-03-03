@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,15 +13,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Subscription {
+public class BookingPartecipant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime subscriptionDate;
-    private int duration;
-    private BigDecimal price;
+    private String first_name;
+    private String last_name;
+    private LocalDateTime birth_data;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(mappedBy = "bookingPartecipant",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Insurance insurance;
 }

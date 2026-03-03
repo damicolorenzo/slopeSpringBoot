@@ -1,11 +1,23 @@
 package com.lorenzoproject.slope.model;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Collection;
 import java.util.HashSet;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
 public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    private Collection<RegisteredUser> users = new HashSet<>();
+    @ManyToMany(mappedBy = "roles")
+    private Collection<User> users = new HashSet<>();
 }
