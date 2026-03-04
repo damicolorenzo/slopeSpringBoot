@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,4 +32,8 @@ public class SkiFacility {
 
     @OneToMany(mappedBy = "skiFacility", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
+    public BigDecimal getDailyPrice() {
+        return BigDecimal.ZERO;
+    }
 }

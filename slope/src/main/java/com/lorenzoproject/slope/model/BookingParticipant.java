@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,13 +14,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class BookingPartecipant {
+public class BookingParticipant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String first_name;
-    private String last_name;
-    private LocalDateTime birth_data;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthData;
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
@@ -29,7 +30,7 @@ public class BookingPartecipant {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "bookingPartecipant",
+    @OneToOne(mappedBy = "bookingParticipant",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Insurance insurance;

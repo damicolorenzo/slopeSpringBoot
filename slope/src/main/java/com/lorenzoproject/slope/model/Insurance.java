@@ -19,13 +19,13 @@ public class Insurance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BigDecimal price;
-    private String coverage_type;
+    private String coverageType;
     private String status;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @OneToOne
     @JoinColumn(name = "booking_participant_id")
-    private BookingPartecipant bookingPartecipant;
+    private BookingParticipant bookingParticipant;
 
 
 

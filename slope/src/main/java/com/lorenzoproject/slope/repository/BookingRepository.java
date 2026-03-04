@@ -1,0 +1,7 @@
+package com.lorenzoproject.slope.repository;
+
+import com.lorenzoproject.slope.model.Booking;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookingRepository extends JpaRepository<Booking, Long> {
+}
