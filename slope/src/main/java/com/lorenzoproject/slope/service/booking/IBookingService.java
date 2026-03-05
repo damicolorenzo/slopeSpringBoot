@@ -8,5 +8,4 @@ import java.math.BigDecimal;
 
 public interface IBookingService {
     Order createBooking(CreateBookingRequest request, Long userId);
-    BigDecimal applySubscriptionDiscount(User user, BigDecimal totalPrice);
 }

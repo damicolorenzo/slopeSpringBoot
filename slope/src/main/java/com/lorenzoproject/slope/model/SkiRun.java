@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.model;
 
+import com.lorenzoproject.slope.enums.DifficultyLevel;
 import com.lorenzoproject.slope.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,8 @@ public class SkiRun {
     private String name;
     private String type;
     private Status status;
+    private DifficultyLevel difficulty;
+    private Double lengthKm;
 
     @ManyToOne
     @JoinColumn(name = "ski_facility_id")

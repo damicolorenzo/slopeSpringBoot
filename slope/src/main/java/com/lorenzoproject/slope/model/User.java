@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +24,7 @@ public class User {
     private String lastName;
     private String email;
     private String phoneNumber;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     private String username;
     private String password;
 

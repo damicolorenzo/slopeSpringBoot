@@ -1,7 +1,6 @@
 package com.lorenzoproject.slope.service.booking;
 
 import com.lorenzoproject.slope.enums.BookingStatus;
-import com.lorenzoproject.slope.enums.OrderStatus;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.model.*;
 import com.lorenzoproject.slope.repository.BookingRepository;
@@ -11,6 +10,7 @@ import com.lorenzoproject.slope.repository.UserRepository;
 import com.lorenzoproject.slope.request.CreateBookingRequest;
 import com.lorenzoproject.slope.request.ParticipantRequest;
 import com.lorenzoproject.slope.service.order.OrderService;
+import com.lorenzoproject.slope.service.subscription.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,7 @@ public class BookingService implements IBookingService{
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final OrderService orderService;
+    private final SubscriptionService subscriptionService;
 
     @Override
     public Order createBooking(CreateBookingRequest request, Long userId) {
@@ -68,20 +69,9 @@ public class BookingService implements IBookingService{
             totalPrice = totalPrice.add(participantPrice);
         }
 
-        totalPrice = applySubscriptionDiscount(buyer, totalPrice);
+        totalPrice = subscriptionService.applyDiscountIfAvailable(buyer, totalPrice);
         booking.setTotalPrice(totalPrice);
 
         return orderService.createOrder(buyer, List.of(booking));
-    }
-
-    @Override
-    public BigDecimal applySubscriptionDiscount(User user, BigDecimal totalPrice) {
-        return subscriptionRepository.findActiveByUserId(user.getId())
-                .map(subscription -> {
-                    BigDecimal discount = totalPrice
-                            .multiply(subscription.getPrice())
-                            .divide(BigDecimal.valueOf(100));
-                    return totalPrice.subtract(discount);
-                }).orElse(totalPrice);
     }
 }

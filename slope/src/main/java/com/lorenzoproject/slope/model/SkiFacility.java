@@ -23,6 +23,8 @@ public class SkiFacility {
     private String name;
     private String type;
     private Status status;
+    private BigDecimal dailyPrice;
+    private Integer maxDailyCapacity;
 
     @OneToMany(mappedBy = "skiFacility")
     private List<LiftStructure> liftStructures;

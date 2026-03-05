@@ -1,8 +1,11 @@
 package com.lorenzoproject.slope.repository;
 
+import com.lorenzoproject.slope.enums.Status;
 import com.lorenzoproject.slope.model.SkiFacility;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SkiFacilityRepository extends JpaRepository<SkiFacility, Long> {
+import java.util.List;
 
+public interface SkiFacilityRepository extends JpaRepository<SkiFacility, Long> {
+    List<SkiFacility> findByStatus(Status status);
 }
