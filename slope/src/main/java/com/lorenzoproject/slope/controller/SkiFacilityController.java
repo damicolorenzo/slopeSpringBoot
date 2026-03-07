@@ -2,10 +2,10 @@ package com.lorenzoproject.slope.controller;
 
 import com.lorenzoproject.slope.dto.SkiFacilityDto;
 import com.lorenzoproject.slope.exceptions.AlreadyExistsException;
+import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.exceptions.SkiFacilityNotFoundException;
 import com.lorenzoproject.slope.model.SkiFacility;
 import com.lorenzoproject.slope.request.AddSkiFacilityRequest;
-import com.lorenzoproject.slope.request.CreateFacilityRequest;
 import com.lorenzoproject.slope.request.UpdateSkiFacilityRequest;
 import com.lorenzoproject.slope.response.ApiResponse;
 import com.lorenzoproject.slope.service.skifacility.ISkiFacilityService;
@@ -45,7 +45,7 @@ public class SkiFacilityController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addSkiFacility(AddSkiFacilityRequest skiFacility) {
+    public ResponseEntity<ApiResponse> addSkiFacility(@RequestBody AddSkiFacilityRequest skiFacility) {
         try {
             SkiFacility theSkiFacility = skiFacilityService.addSkiFacility(skiFacility);
             SkiFacilityDto skiFacilityDto = skiFacilityService.convertToDto(theSkiFacility);
@@ -55,7 +55,28 @@ public class SkiFacilityController {
         }
     }
 
-    public ResponseEntity<ApiResponse> updateSkiFacility(UpdateSkiFacilityRequest request, Long id) {
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/skifacility/{skifacilityId}/update")
+    public ResponseEntity<ApiResponse> updateSkiFacility(@RequestBody UpdateSkiFacilityRequest request, @PathVariable("skifacilityId") Long id) {
+        try {
+            SkiFacility theSKiFacility = skiFacilityService.updateSkiFacility(request, id);
+            SkiFacilityDto skiFacilityDto = skiFacilityService.convertToDto(theSKiFacility);
+            return ResponseEntity.ok(new ApiResponse("Update facility success", skiFacilityDto));
+        } catch(ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/skifacility/{skifacilityId}/delete")
+    public ResponseEntity<ApiResponse> deleteSkiFacility(@PathVariable("skifacilityId") Long id) {
+        try {
+            skiFacilityService.deleteSkiFacilityById(id);
+            return ResponseEntity.ok(new ApiResponse("Delete facility success", id));
+        } catch(ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+
 }

@@ -12,6 +12,7 @@ import com.lorenzoproject.slope.repository.ImageRepository;
 import com.lorenzoproject.slope.repository.SkiFacilityRepository;
 import com.lorenzoproject.slope.request.AddSkiFacilityRequest;
 import com.lorenzoproject.slope.request.CreateFacilityRequest;
+import com.lorenzoproject.slope.request.UpdateSkiFacilityRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class SkiFacilityService implements ISkiFacilityService{
     private final ImageRepository imageRepository;
     private final ModelMapper modelMapper;
 
+    @Override
     public SkiFacility addSkiFacility(AddSkiFacilityRequest request) {
         if(skiFacilityExists(request.getName())) {
             throw new AlreadyExistsException(request.getName() + " already exists, you may update this ski facility instead");
@@ -35,6 +37,28 @@ public class SkiFacilityService implements ISkiFacilityService{
 
     private boolean skiFacilityExists(String name) {
         return skiFacilityRepository.existsByName(name);
+    }
+
+    @Override
+    public SkiFacility updateSkiFacility(UpdateSkiFacilityRequest request, Long id) {
+        return skiFacilityRepository.findById(id)
+                .map(existingSkiFacility -> updateExistingSkiFacility(existingSkiFacility, request))
+                .map(skiFacilityRepository::save)
+                .orElseThrow(() -> new SkiFacilityNotFoundException("Facility not found"));
+    }
+
+    private SkiFacility updateExistingSkiFacility(SkiFacility existingSkiFacility, UpdateSkiFacilityRequest request) {
+        existingSkiFacility.setName(request.getName());
+        existingSkiFacility.setDailyPrice(request.getDailyPrice());
+        existingSkiFacility.setMaxDailyCapacity(request.getMaxDailyCapacity());
+
+        return existingSkiFacility;
+    }
+
+    @Override
+    public void deleteSkiFacilityById(Long id) {
+        skiFacilityRepository.findById(id).ifPresentOrElse(skiFacilityRepository::delete,
+                () -> {throw new SkiFacilityNotFoundException("Facility not found");});
     }
 
     @Override

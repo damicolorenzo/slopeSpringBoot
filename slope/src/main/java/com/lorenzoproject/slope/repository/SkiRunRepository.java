@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SkiRunRepository extends JpaRepository<SkiRun, Long> {
     List<SkiRun> findBySkiFacilityIdAndStatus(Long facilityId, Status status);
+    boolean existsByName(String name);
 }

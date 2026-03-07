@@ -4,6 +4,7 @@ import com.lorenzoproject.slope.dto.SkiFacilityDto;
 import com.lorenzoproject.slope.model.SkiFacility;
 import com.lorenzoproject.slope.request.AddSkiFacilityRequest;
 import com.lorenzoproject.slope.request.CreateFacilityRequest;
+import com.lorenzoproject.slope.request.UpdateSkiFacilityRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,6 +14,10 @@ public interface ISkiFacilityService {
     SkiFacility addSkiFacility(AddSkiFacilityRequest request);
 
     SkiFacility createFacility(AddSkiFacilityRequest request);
+
+    SkiFacility updateSkiFacility(UpdateSkiFacilityRequest request, Long id);
+
+    void deleteSkiFacilityById(Long id);
 
     SkiFacility updatePrice(Long facilityId, BigDecimal newPrice);
 
