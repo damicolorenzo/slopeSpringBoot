@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class LiftStructure {
     private String name;
     private String type;
     private Status status;
-    private int seats;
+    private BigDecimal seats;
 
     @ManyToOne
     @JoinColumn(name = "ski_facility_id")
