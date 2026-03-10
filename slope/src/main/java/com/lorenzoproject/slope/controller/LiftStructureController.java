@@ -9,6 +9,7 @@ import com.lorenzoproject.slope.model.LiftStructure;
 import com.lorenzoproject.slope.model.SkiRun;
 import com.lorenzoproject.slope.request.AddLiftStructureRequest;
 import com.lorenzoproject.slope.request.AddSkiRunRequest;
+import com.lorenzoproject.slope.request.UpdateLiftStructureRequest;
 import com.lorenzoproject.slope.request.UpdateSkiRunRequest;
 import com.lorenzoproject.slope.response.ApiResponse;
 import com.lorenzoproject.slope.service.liftstructure.ILiftStructureService;
@@ -61,22 +62,22 @@ public class LiftStructureController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/liftstructure/{id}/update")
-    public ResponseEntity<ApiResponse> updateSkiRun(@RequestBody UpdateSkiRunRequest request, @PathVariable("skirunId") Long id) {
+    public ResponseEntity<ApiResponse> updateLiftStructure(@RequestBody UpdateLiftStructureRequest request, @PathVariable("liftstructureId") Long id) {
         try {
-            SkiRun theSkiRun = skiRunService.updateSkiRun(request, id);
-            SkiRunDto skiRunDto = skiRunService.convertToDto(theSkiRun);
-            return ResponseEntity.ok(new ApiResponse("Update ski run success", skiRunDto));
+            LiftStructure theLift = liftStructureService.updateLiftStructure(request, id);
+            LiftStructureDto liftStructureDto = liftStructureService.convertToDto(theLift);
+            return ResponseEntity.ok(new ApiResponse("Update lift success", liftStructureDto));
         } catch(ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/skirun/{skirunId}/delete")
-    public ResponseEntity<ApiResponse> deleteSkiRun(@PathVariable("skirunId") Long id) {
+    @DeleteMapping("/liftstructure/{id}/delete")
+    public ResponseEntity<ApiResponse> deleteLiftStructure(@PathVariable Long id) {
         try {
-            skiRunService.deleteSkiRunById(id);
-            return ResponseEntity.ok(new ApiResponse("Delete ski run success", id));
+            liftStructureService.deleteLiftStructureById(id);
+            return ResponseEntity.ok(new ApiResponse("Delete lift success", id));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
