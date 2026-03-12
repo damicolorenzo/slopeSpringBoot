@@ -1,7 +1,9 @@
 package com.lorenzoproject.slope.service.booking;
 
 import com.lorenzoproject.slope.enums.BookingStatus;
+import com.lorenzoproject.slope.exceptions.BookingNotFoundException;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
+import com.lorenzoproject.slope.exceptions.SkiFacilityNotFoundException;
 import com.lorenzoproject.slope.model.*;
 import com.lorenzoproject.slope.repository.BookingRepository;
 import com.lorenzoproject.slope.repository.SkiFacilityRepository;
@@ -73,5 +75,19 @@ public class BookingService implements IBookingService{
         booking.setTotalPrice(totalPrice);
 
         return orderService.createOrder(buyer, List.of(booking));
+    }
+
+    public List<Booking> getBookingsByUserId(Long userId) {
+        return bookingRepository.getBookingsByUserId(userId);
+    }
+
+    public void cancelBookingById(Long userId) {
+        bookingRepository.findById(userId).ifPresentOrElse(bookingRepository::delete,
+                () -> {throw new BookingNotFoundException("Booking not found");});
+    }
+
+    public Booking getBookingById(Long bookingId) {
+        return bookingRepository.findById(bookingId).orElseThrow(
+                () -> {throw new BookingNotFoundException("Booking not found");});
     }
 }
