@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lorenzoproject.slope.enums.DifficultyLevel;
 import com.lorenzoproject.slope.enums.Status;
 import jakarta.persistence.*;
@@ -26,6 +27,7 @@ public class SkiRun {
     private DifficultyLevel difficulty;
     private Double lengthKm;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ski_facility_id")
     private SkiFacility skiFacility;

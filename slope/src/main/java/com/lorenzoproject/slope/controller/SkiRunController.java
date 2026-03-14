@@ -43,7 +43,7 @@ public class SkiRunController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add/{skifacilityId}")
     public ResponseEntity<ApiResponse> addSkiRun(@RequestBody AddSkiRunRequest skiRun, @PathVariable("skifacilityId") Long id) {
         try {
@@ -55,7 +55,7 @@ public class SkiRunController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/skirun/{skiRunId}/update")
     public ResponseEntity<ApiResponse> updateSkiRun(@RequestBody UpdateSkiRunRequest request, @PathVariable("skirunId") Long id) {
         try {
@@ -67,7 +67,7 @@ public class SkiRunController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/skirun/{skirunId}/delete")
     public ResponseEntity<ApiResponse> deleteSkiRun(@PathVariable("skirunId") Long id) {
         try {

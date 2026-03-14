@@ -29,7 +29,7 @@ public class BookingController {
 
     @GetMapping("/booking/{userId}/bookings")
     public ResponseEntity<ApiResponse> getUserBookings(@PathVariable Long userId) {
-        List<Booking> bookings = bookingService.getBookingsByUserId(userId);
+        List<Booking> bookings = bookingService.getBookingsByBuyerId(userId);
         return ResponseEntity.ok(new ApiResponse("Success", bookings));
     }
 

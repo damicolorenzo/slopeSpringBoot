@@ -17,6 +17,6 @@ public class SkiRunDto {
     private DifficultyLevel difficulty;
     private Double lengthKm;
 
-    private SkiFacility skiFacility;
+    private SkiFacilityDto skiFacility;
     private List<ImageDto> images;
 }

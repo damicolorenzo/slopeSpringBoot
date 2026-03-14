@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/liftstructure")
+@RequestMapping("${api.prefix}/liftstructures")
 public class LiftStructureController {
     private final ILiftStructureService liftStructureService;
 
@@ -48,7 +48,7 @@ public class LiftStructureController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add/{skifacilityId}")
     public ResponseEntity<ApiResponse> addLiftStructure(@RequestBody AddLiftStructureRequest liftStructure, @PathVariable("skifacilityId") Long id) {
         try {
@@ -60,7 +60,7 @@ public class LiftStructureController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/liftstructure/{id}/update")
     public ResponseEntity<ApiResponse> updateLiftStructure(@RequestBody UpdateLiftStructureRequest request, @PathVariable("liftstructureId") Long id) {
         try {
@@ -72,7 +72,7 @@ public class LiftStructureController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/liftstructure/{id}/delete")
     public ResponseEntity<ApiResponse> deleteLiftStructure(@PathVariable Long id) {
         try {

@@ -16,6 +16,6 @@ public class LiftStructureDto {
     private Status status;
     private BigDecimal seats;
 
-    private SkiFacility skiFacility;
+    private SkiFacilityDto skiFacility;
     private List<ImageDto> images;
 }

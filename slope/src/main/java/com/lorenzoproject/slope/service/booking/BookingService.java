@@ -77,8 +77,8 @@ public class BookingService implements IBookingService{
         return orderService.createOrder(buyer, List.of(booking));
     }
 
-    public List<Booking> getBookingsByUserId(Long userId) {
-        return bookingRepository.getBookingsByUserId(userId);
+    public List<Booking> getBookingsByBuyerId(Long buyerId) {
+        return bookingRepository.findByBuyerId(buyerId);
     }
 
     public void cancelBookingById(Long userId) {

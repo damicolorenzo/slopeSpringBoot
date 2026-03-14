@@ -1,6 +1,7 @@
 package com.lorenzoproject.slope.service.skirun;
 
 import com.lorenzoproject.slope.dto.ImageDto;
+import com.lorenzoproject.slope.dto.SkiFacilityDto;
 import com.lorenzoproject.slope.dto.SkiRunDto;
 import com.lorenzoproject.slope.enums.Status;
 import com.lorenzoproject.slope.exceptions.AlreadyExistsException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -105,6 +107,9 @@ public class SkiRunService implements ISkiRunService{
                 .map(image -> modelMapper.map(image, ImageDto.class))
                 .toList();
         skiRunDto.setImages(imageDtos);
+        Optional<SkiFacility> skiFacility = skiFacilityRepository.findById(skiRun.getSkiFacility().getId());
+        SkiFacilityDto skiFacilityDto = modelMapper.map(skiFacility, SkiFacilityDto.class);
+        skiRunDto.setSkiFacility(skiFacilityDto);
         return skiRunDto;
     }
 

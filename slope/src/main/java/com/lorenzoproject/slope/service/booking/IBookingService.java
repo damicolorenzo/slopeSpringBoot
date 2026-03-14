@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface IBookingService {
     Order createBooking(CreateBookingRequest request, Long userId);
-    List<Booking> getBookingsByUserId(Long userId);
+    List<Booking> getBookingsByBuyerId(Long buyerId);
     void cancelBookingById(Long userId);
     Booking getBookingById(Long bookingId);
 }

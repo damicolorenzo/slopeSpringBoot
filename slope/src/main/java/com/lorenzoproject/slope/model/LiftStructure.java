@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lorenzoproject.slope.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class LiftStructure {
     private Status status;
     private BigDecimal seats;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ski_facility_id")
     private SkiFacility skiFacility;

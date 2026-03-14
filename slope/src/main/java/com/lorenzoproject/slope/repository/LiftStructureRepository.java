@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LiftStructureRepository extends JpaRepository<LiftStructure, Long> {
-    List<LiftStructure> findBySkiFacilityIdAndStatus(Long id, Status status)
+    List<LiftStructure> findBySkiFacilityIdAndStatus(Long id, Status status);
     boolean existsByName(String name);
 }

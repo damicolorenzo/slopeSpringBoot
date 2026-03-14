@@ -9,7 +9,6 @@ import java.math.BigInteger;
 
 @Data
 public class AddLiftStructureRequest {
-    private Long id;
     private String name;
     private String type;
     private Status status;

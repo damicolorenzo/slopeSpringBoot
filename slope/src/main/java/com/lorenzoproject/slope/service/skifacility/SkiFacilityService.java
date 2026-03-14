@@ -65,9 +65,10 @@ public class SkiFacilityService implements ISkiFacilityService{
     public SkiFacility createFacility(AddSkiFacilityRequest request) {
         SkiFacility facility = new SkiFacility();
         facility.setName(request.getName());
+        facility.setType(request.getType());
+        facility.setStatus(Status.OPEN);
         facility.setDailyPrice(request.getDailyPrice());
         facility.setMaxDailyCapacity(request.getMaxDailyCapacity());
-        facility.setStatus(Status.OPEN);
         return skiFacilityRepository.save(facility);
     }
 

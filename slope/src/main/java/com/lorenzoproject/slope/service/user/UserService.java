@@ -30,10 +30,13 @@ public class UserService implements IUserService{
                 .filter(user -> !userRepository.existsByEmail(request.getEmail()))
                 .map(req -> {
                     User user = new User();
-                    user.setEmail(request.getEmail());
                     user.setFirstName(request.getFirstName());
                     user.setLastName(request.getLastName());
-                    user.setPassword(request.getPassword()); //need to encode this
+                    user.setEmail(request.getEmail());
+                    user.setPhoneNumber(request.getPhoneNumber());
+                    user.setBirthDate(request.getBirthDate());
+                    user.setUsername(request.getUsername());
+                    user.setPassword(request.getPassword()); // FIXME need to encode this
                     return userRepository.save(user);
                 }).orElseThrow(() -> new AlreadyExistsException(request.getEmail() + " already exists"));
     }
@@ -44,6 +47,11 @@ public class UserService implements IUserService{
                 .map(existingUser -> {
                     existingUser.setFirstName(request.getFirstName());
                     existingUser.setLastName(request.getLastName());
+                    existingUser.setEmail(request.getEmail());
+                    existingUser.setPhoneNumber(request.getPhoneNumber());
+                    existingUser.setBirthDate(request.getBirthDate());
+                    existingUser.setUsername(request.getUsername());
+                    existingUser.setPassword(request.getPassword());
                     return userRepository.save(existingUser);
                 }).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
