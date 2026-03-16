@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.repository;
 
+import com.lorenzoproject.slope.dto.BookingDto;
 import com.lorenzoproject.slope.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 

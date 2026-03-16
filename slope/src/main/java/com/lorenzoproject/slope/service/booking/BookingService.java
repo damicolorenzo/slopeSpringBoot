@@ -1,5 +1,8 @@
 package com.lorenzoproject.slope.service.booking;
 
+import com.lorenzoproject.slope.dto.BookingDto;
+import com.lorenzoproject.slope.dto.ImageDto;
+import com.lorenzoproject.slope.dto.OrderDto;
 import com.lorenzoproject.slope.enums.BookingStatus;
 import com.lorenzoproject.slope.exceptions.BookingNotFoundException;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
@@ -14,9 +17,15 @@ import com.lorenzoproject.slope.request.ParticipantRequest;
 import com.lorenzoproject.slope.service.order.OrderService;
 import com.lorenzoproject.slope.service.subscription.SubscriptionService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +37,7 @@ public class BookingService implements IBookingService{
     private final SubscriptionRepository subscriptionRepository;
     private final OrderService orderService;
     private final SubscriptionService subscriptionService;
+    private final ModelMapper modelMapper;
 
     @Override
     public Order createBooking(CreateBookingRequest request, Long userId) {
@@ -77,17 +87,28 @@ public class BookingService implements IBookingService{
         return orderService.createOrder(buyer, List.of(booking));
     }
 
-    public List<Booking> getBookingsByBuyerId(Long buyerId) {
-        return bookingRepository.findByBuyerId(buyerId);
+    @Override
+    public List<BookingDto> getBookingsByBuyerId(Long buyerId) {
+        List<Booking> bookings = bookingRepository.findByBuyerId(buyerId);
+        return bookings.stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
+    @Override
     public void cancelBookingById(Long userId) {
         bookingRepository.findById(userId).ifPresentOrElse(bookingRepository::delete,
                 () -> {throw new BookingNotFoundException("Booking not found");});
     }
 
+    @Override
     public Booking getBookingById(Long bookingId) {
         return bookingRepository.findById(bookingId).orElseThrow(
                 () -> {throw new BookingNotFoundException("Booking not found");});
+    }
+
+    @Override
+    public BookingDto convertToDto(Booking booking) {
+        return modelMapper.map(booking, BookingDto.class);
     }
 }

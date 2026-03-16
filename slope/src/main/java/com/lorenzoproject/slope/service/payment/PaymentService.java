@@ -1,9 +1,15 @@
 package com.lorenzoproject.slope.service.payment;
 
+import com.lorenzoproject.slope.dto.PaymentDto;
+import com.lorenzoproject.slope.enums.BookingStatus;
 import com.lorenzoproject.slope.enums.OrderStatus;
+import com.lorenzoproject.slope.enums.PaymentStatus;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.model.Order;
+import com.lorenzoproject.slope.model.Payment;
 import com.lorenzoproject.slope.repository.OrderRepository;
+import com.lorenzoproject.slope.repository.PaymentRepository;
+import com.lorenzoproject.slope.request.PaymentRequest;
 import com.lorenzoproject.slope.service.order.OrderService;
 import com.stripe.Stripe;
 import com.stripe.model.Event;
@@ -11,84 +17,128 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentService implements IPaymentService{
+public class PaymentService implements IPaymentService {
+
+    private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
-    private final OrderService orderService;
-
-    private String stripeSecretKey;
-    private String webhookSecret;
-    private String successUrl;
-    private String cancelUrl;
-
-    public void init() {
-        Stripe.apiKey = stripeSecretKey;
-    }
+    private final ModelMapper modelMapper;
 
     @Override
-    public String createCheckoutSession(Long orderId) {
+
+    public PaymentDto initiatePayment(Long orderId, PaymentRequest request) {
+        // Find the order
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        if(order.getOrderStatus() != OrderStatus.PENDING) {
-            throw new RuntimeException("Order is not payable");
+        // Check if order is already paid
+        if (order.getOrderStatus() == OrderStatus.PAID) {
+            throw new IllegalStateException("Order is already paid");
         }
 
-        SessionCreateParams params = SessionCreateParams
-                .builder()
-                .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(successUrl + "?orderId=" + orderId)
-                .setCancelUrl(cancelUrl)
-                .addLineItem(SessionCreateParams.LineItem.builder()
-                                .setQuantity(1L)
-                                .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
-                                        .setCurrency("eur")
-                                        .setUnitAmount(order.getTotalAmount()
-                                                .multiply(BigDecimal.valueOf(100))
-                                                .longValue()
-                                        )
-                                        .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                .setName("Ski Booking")
-                                                .build()
-                                        )
-                                        .build()
-                                )
-                                .build()
-                )
-                .putMetadata("orderId", orderId.toString())
-                .build();
-
-        try {
-            Session session = Session.create(params);
-            return session.getUrl();
-        } catch(Exception e) {
-            throw new RuntimeException("Stripe error", e);
+        // Check if payment already exists
+        Optional<Payment> existingPayment = paymentRepository.findByOrderId(orderId);
+        if (existingPayment.isPresent() &&
+                existingPayment.get().getStatus() == PaymentStatus.COMPLETED) {
+            throw new IllegalStateException("Payment already completed for this order");
         }
+
+        // Create payment
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setAmount(order.getTotalAmount());
+        payment.setPaymentMethod(request.getPaymentMethod());
+        payment.setStatus(PaymentStatus.PENDING);
+        payment.setTransactionId(generateTransactionId());
+
+        Payment savedPayment = paymentRepository.save(payment);
+
+        return convertToDto(savedPayment);
     }
 
     @Override
-    public void handleStripeWebhook(String payload, String sigHeader) {
-        Event event;
+
+    public PaymentDto processPayment(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+
+        // Update payment status
+        payment.setStatus(PaymentStatus.PROCESSING);
 
         try {
-            event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
+            // Here you would integrate with actual payment gateway
+            // For now, we'll simulate successful payment
+            boolean paymentSuccessful = processWithPaymentGateway(payment);
+
+            if (paymentSuccessful) {
+                payment.setStatus(PaymentStatus.COMPLETED);
+                payment.setPaymentDate(LocalDateTime.now());
+
+                // Update order status
+                Order order = payment.getOrder();
+                order.setOrderStatus(OrderStatus.PAID);
+                order.getBookings().forEach(b -> b.setStatus(BookingStatus.CONFIRMED));
+                orderRepository.save(order);
+            } else {
+                payment.setStatus(PaymentStatus.FAILED);
+            }
+
         } catch (Exception e) {
-            throw new RuntimeException("Invalid webhook", e);
+            payment.setStatus(PaymentStatus.FAILED);
         }
 
-        if("checkout.session.completed".equals(event.getType())) {
-            Session session = (Session) event.getDataObjectDeserializer()
-                    .getObject()
-                    .orElseThrow();
+        Payment updatedPayment = paymentRepository.save(payment);
+        return convertToDto(updatedPayment);
+    }
 
-            Long orderId = Long.parseLong(session.getMetadata().get("orderId"));
+    @Override
+    public void cancelPayment(Long orderId) {
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
 
-            orderService.confirmPayment(orderId);
+        if (payment.getStatus() == PaymentStatus.COMPLETED) {
+            throw new IllegalStateException("Cannot cancel completed payment");
         }
+
+        payment.setStatus(PaymentStatus.CANCELLED);
+        paymentRepository.save(payment);
+
+        // Update order status
+        Order order = payment.getOrder();
+        order.setOrderStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public PaymentDto getPaymentByOrderId(Long orderId) {
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found for order"));
+        return convertToDto(payment);
+    }
+
+    @Override
+    public PaymentDto convertToDto(Payment payment) {
+        return modelMapper.map(payment, PaymentDto.class);
+    }
+
+    // Helper methods
+    private String generateTransactionId() {
+        return "TXN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    private boolean processWithPaymentGateway(Payment payment) {
+        // Simulate payment gateway call
+        // In production, integrate with Stripe, PayPal, etc.
+        return true;  // Simulated success
     }
 }

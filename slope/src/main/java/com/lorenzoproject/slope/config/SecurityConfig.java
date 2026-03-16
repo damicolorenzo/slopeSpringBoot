@@ -26,11 +26,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/**").permitAll()
-                        .requestMatchers("/api/v1/skifacilities/**").permitAll()
-                        .requestMatchers("/api/v1/skiruns/**").permitAll()
-                        .requestMatchers("/api/v1/liftstructures/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }

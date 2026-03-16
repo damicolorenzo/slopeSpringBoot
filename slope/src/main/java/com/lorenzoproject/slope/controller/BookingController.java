@@ -1,11 +1,14 @@
 package com.lorenzoproject.slope.controller;
 
+import com.lorenzoproject.slope.dto.BookingDto;
+import com.lorenzoproject.slope.dto.OrderDto;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.model.Booking;
 import com.lorenzoproject.slope.model.Order;
 import com.lorenzoproject.slope.request.CreateBookingRequest;
 import com.lorenzoproject.slope.response.ApiResponse;
 import com.lorenzoproject.slope.service.booking.IBookingService;
+import com.lorenzoproject.slope.service.order.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,17 +23,19 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequestMapping("${api.prefix}/bookings")
 public class BookingController {
     private final IBookingService bookingService;
+    private final IOrderService orderService;
 
     @PostMapping("/booking")
-    public ResponseEntity<ApiResponse> createBooking(@RequestBody CreateBookingRequest request, @PathVariable Long userId) {
+    public ResponseEntity<ApiResponse> createBooking(@RequestBody CreateBookingRequest request, @RequestParam Long userId) {
         Order order = bookingService.createBooking(request, userId);
-        return ResponseEntity.ok(new ApiResponse("Booking created", order));
+        OrderDto orderDto = orderService.convertToDto(order);
+        return ResponseEntity.ok(new ApiResponse("Booking created", orderDto));
     }
 
     @GetMapping("/booking/{userId}/bookings")
     public ResponseEntity<ApiResponse> getUserBookings(@PathVariable Long userId) {
-        List<Booking> bookings = bookingService.getBookingsByBuyerId(userId);
-        return ResponseEntity.ok(new ApiResponse("Success", bookings));
+        List<BookingDto> bookingDtos = bookingService.getBookingsByBuyerId(userId);
+        return ResponseEntity.ok(new ApiResponse("Success", bookingDtos));
     }
 
     @DeleteMapping("/booking/{bookingId}/delete")

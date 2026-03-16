@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,14 +27,17 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "ski_facility_id")
+    @JsonIgnore
     private SkiFacility skiFacility;
 
     @ManyToOne
     @JoinColumn(name = "ski_run_id")
+    @JsonIgnore
     private SkiRun skiRun;
 
     @ManyToOne
     @JoinColumn(name = "lift_structure_id")
+    @JsonIgnore
     private LiftStructure liftStructure;
 
 }

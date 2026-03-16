@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.service.booking;
 
+import com.lorenzoproject.slope.dto.BookingDto;
 import com.lorenzoproject.slope.model.Booking;
 import com.lorenzoproject.slope.model.Order;
 import com.lorenzoproject.slope.request.CreateBookingRequest;
@@ -11,7 +12,8 @@ import java.util.List;
 @Service
 public interface IBookingService {
     Order createBooking(CreateBookingRequest request, Long userId);
-    List<Booking> getBookingsByBuyerId(Long buyerId);
+    List<BookingDto> getBookingsByBuyerId(Long buyerId);
     void cancelBookingById(Long userId);
     Booking getBookingById(Long bookingId);
+    BookingDto convertToDto(Booking booking);
 }

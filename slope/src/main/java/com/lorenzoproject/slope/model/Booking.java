@@ -1,5 +1,7 @@
 package com.lorenzoproject.slope.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lorenzoproject.slope.enums.BookingStatus;
 import com.lorenzoproject.slope.enums.BookingTypes;
 import com.lorenzoproject.slope.enums.OrderStatus;
@@ -35,6 +37,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     @ManyToOne
