@@ -1,5 +1,6 @@
 package com.lorenzoproject.slope.service.user;
 
+import com.lorenzoproject.slope.dto.UserDto;
 import com.lorenzoproject.slope.exceptions.AlreadyExistsException;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.model.User;
@@ -7,6 +8,9 @@ import com.lorenzoproject.slope.repository.UserRepository;
 import com.lorenzoproject.slope.request.CreateUserRequest;
 import com.lorenzoproject.slope.request.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,7 @@ import java.util.Optional;
 public class UserService implements IUserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(Long userId) {
@@ -36,7 +41,7 @@ public class UserService implements IUserService{
                     user.setPhoneNumber(request.getPhoneNumber());
                     user.setBirthDate(request.getBirthDate());
                     user.setUsername(request.getUsername());
-                    user.setPassword(request.getPassword()); // FIXME need to encode this
+                    user.setPassword(passwordEncoder.encode(request.getPassword()));
                     return userRepository.save(user);
                 }).orElseThrow(() -> new AlreadyExistsException(request.getEmail() + " already exists"));
     }
@@ -62,5 +67,17 @@ public class UserService implements IUserService{
                 .ifPresentOrElse(userRepository::delete, () -> {
                     throw new ResourceNotFoundException("User not found");
                 });
+    }
+
+    @Override
+    public UserDto convertUserToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepository.findByEmail(email);
     }
 }
