@@ -57,7 +57,7 @@ public class SkiRunController {
 
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/skirun/{skiRunId}/update")
-    public ResponseEntity<ApiResponse> updateSkiRun(@RequestBody UpdateSkiRunRequest request, @PathVariable("skirunId") Long id) {
+    public ResponseEntity<ApiResponse> updateSkiRun(@RequestBody UpdateSkiRunRequest request, @PathVariable("skiRunId") Long id) {
         try {
             SkiRun theSkiRun = skiRunService.updateSkiRun(request, id);
             SkiRunDto skiRunDto = skiRunService.convertToDto(theSkiRun);

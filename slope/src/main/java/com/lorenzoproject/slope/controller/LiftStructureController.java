@@ -61,7 +61,7 @@ public class LiftStructureController {
     }
 
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/liftstructure/{id}/update")
+    @PostMapping("/liftstructure/{liftstructureId}/update")
     public ResponseEntity<ApiResponse> updateLiftStructure(@RequestBody UpdateLiftStructureRequest request, @PathVariable("liftstructureId") Long id) {
         try {
             LiftStructure theLift = liftStructureService.updateLiftStructure(request, id);

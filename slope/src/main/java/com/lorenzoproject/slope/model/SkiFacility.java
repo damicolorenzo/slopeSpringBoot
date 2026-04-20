@@ -34,8 +34,4 @@ public class SkiFacility {
 
     @OneToMany(mappedBy = "skiFacility", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
-
-    public BigDecimal getDailyPrice() {
-        return BigDecimal.ZERO;
-    }
 }
