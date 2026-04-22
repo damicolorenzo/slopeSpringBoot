@@ -62,17 +62,15 @@ public class SkiRunService implements ISkiRunService{
 
     @Override
     public SkiRun updateSkiRun(UpdateSkiRunRequest request, Long runId) {
-        SkiRun run = skiRunRepository.findById(runId)
-                .orElseThrow(() -> new ResourceNotFoundException("Run not found"));
-        if(request.getName() != null)
-            run.setName(request.getName());
-        if(request.getDifficulty() != null)
-            run.setDifficulty(request.getDifficulty());
-        if(request.getLengthKm() != null)
-            run.setLengthKm(request.getLengthKm());
-        if(request.getStatus() != null)
-            run.setStatus(request.getStatus());
-        return run;
+        return skiRunRepository.findById(runId)
+                .map(existingRun -> {
+                    existingRun.setName(request.getName());
+                    existingRun.setDifficulty(request.getDifficulty());
+                    existingRun.setType(request.getType());
+                    existingRun.setStatus(request.getStatus());
+                    existingRun.setLengthKm(request.getLengthKm());
+                    return skiRunRepository.save(existingRun);
+                }).orElseThrow(() -> new ResourceNotFoundException("Run not found"));
     }
 
     @Override

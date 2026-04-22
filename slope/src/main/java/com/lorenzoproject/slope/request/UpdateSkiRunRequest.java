@@ -10,4 +10,5 @@ public class UpdateSkiRunRequest {
     private DifficultyLevel difficulty;
     private Double lengthKm;
     private Status status;
+    private String type;
 }

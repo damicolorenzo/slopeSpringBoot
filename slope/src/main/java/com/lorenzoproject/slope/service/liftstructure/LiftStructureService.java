@@ -60,17 +60,14 @@ public class LiftStructureService implements ILiftStructureService{
 
     @Override
     public LiftStructure updateLiftStructure(UpdateLiftStructureRequest request, Long id) {
-        LiftStructure lift = liftStructureRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("lift not found"));
-        if(request.getName() != null)
-            lift.setName(request.getName());
-        if(request.getType() != null)
-            lift.setType(request.getType());
-        if(request.getStatus() != null)
-            lift.setStatus(request.getStatus());
-        if(request.getSeats() != null)
-            lift.setSeats(request.getSeats());
-        return lift;
+        return liftStructureRepository.findById(id)
+                .map(existingLift -> {
+                    existingLift.setName(request.getName());
+                    existingLift.setType(request.getType());
+                    existingLift.setStatus(request.getStatus());
+                    existingLift.setSeats(request.getSeats());
+                    return liftStructureRepository.save(existingLift);
+                }).orElseThrow(() -> new ResourceNotFoundException("Lift not found"));
     }
 
     @Override
