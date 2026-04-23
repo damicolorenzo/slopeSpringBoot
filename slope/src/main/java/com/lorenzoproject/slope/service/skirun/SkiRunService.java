@@ -14,7 +14,6 @@ import com.lorenzoproject.slope.repository.ImageRepository;
 import com.lorenzoproject.slope.repository.SkiFacilityRepository;
 import com.lorenzoproject.slope.repository.SkiRunRepository;
 import com.lorenzoproject.slope.request.AddSkiRunRequest;
-import com.lorenzoproject.slope.request.CreateSkiRunRequest;
 import com.lorenzoproject.slope.request.UpdateSkiRunRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

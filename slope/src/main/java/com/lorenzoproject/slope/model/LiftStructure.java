@@ -23,6 +23,7 @@ public class LiftStructure {
     private Long id;
     private String name;
     private String type;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private BigDecimal seats;
 

@@ -28,7 +28,9 @@ public class Payment {
     private Order order;
 
     private BigDecimal amount;
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     private String transactionId;
     private LocalDateTime paymentDate;

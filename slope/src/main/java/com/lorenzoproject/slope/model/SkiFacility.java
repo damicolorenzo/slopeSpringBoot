@@ -22,6 +22,8 @@ public class SkiFacility {
     private Long id;
     private String name;
     private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
     private BigDecimal dailyPrice;
     private Integer maxDailyCapacity;

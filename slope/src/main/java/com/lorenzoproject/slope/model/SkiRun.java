@@ -23,7 +23,9 @@ public class SkiRun {
     private Long id;
     private String name;
     private String type;
+    @Enumerated(EnumType.STRING)
     private Status status;
+    @Enumerated(EnumType.STRING)
     private DifficultyLevel difficulty;
     private Double lengthKm;
 

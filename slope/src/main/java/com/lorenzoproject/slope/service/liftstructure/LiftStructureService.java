@@ -9,7 +9,6 @@ import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.model.Image;
 import com.lorenzoproject.slope.model.LiftStructure;
 import com.lorenzoproject.slope.model.SkiFacility;
-import com.lorenzoproject.slope.model.SkiRun;
 import com.lorenzoproject.slope.repository.ImageRepository;
 import com.lorenzoproject.slope.repository.LiftStructureRepository;
 import com.lorenzoproject.slope.repository.SkiFacilityRepository;

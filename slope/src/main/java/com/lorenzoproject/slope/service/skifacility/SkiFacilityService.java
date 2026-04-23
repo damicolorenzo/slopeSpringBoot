@@ -11,7 +11,6 @@ import com.lorenzoproject.slope.model.SkiFacility;
 import com.lorenzoproject.slope.repository.ImageRepository;
 import com.lorenzoproject.slope.repository.SkiFacilityRepository;
 import com.lorenzoproject.slope.request.AddSkiFacilityRequest;
-import com.lorenzoproject.slope.request.CreateFacilityRequest;
 import com.lorenzoproject.slope.request.UpdateSkiFacilityRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -90,6 +89,11 @@ public class SkiFacilityService implements ISkiFacilityService{
     @Override
     public List<SkiFacility> getActiveFacilities() {
         return skiFacilityRepository.findByStatus(Status.OPEN);
+    }
+
+    @Override
+    public List<SkiFacility> getFacilities() {
+        return skiFacilityRepository.findAll();
     }
 
     @Override

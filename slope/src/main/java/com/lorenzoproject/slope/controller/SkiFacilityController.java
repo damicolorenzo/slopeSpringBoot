@@ -27,9 +27,9 @@ public class SkiFacilityController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllSkiFacilities() {
-        List<SkiFacility> skiFacilities = skiFacilityService.getActiveFacilities();
-        List<SkiFacilityDto> convertedSkiFacilities = skiFacilityService.getConvertedSkiFacilities(skiFacilities);
-        return ResponseEntity.ok(new ApiResponse("Success", convertedSkiFacilities));
+        List<SkiFacility> skiFacilities = skiFacilityService.getFacilities();
+        //List<SkiFacilityDto> convertedSkiFacilities = skiFacilityService.getConvertedSkiFacilities(skiFacilities);
+        return ResponseEntity.ok(new ApiResponse("Success", skiFacilities));
     }
 
     @GetMapping("/skifacility/{skifacilityId}/skifacility")

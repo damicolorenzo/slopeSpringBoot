@@ -2,8 +2,6 @@ package com.lorenzoproject.slope.dto;
 
 import com.lorenzoproject.slope.enums.DifficultyLevel;
 import com.lorenzoproject.slope.enums.Status;
-import com.lorenzoproject.slope.model.Image;
-import com.lorenzoproject.slope.model.SkiFacility;
 import lombok.Data;
 
 import java.util.List;

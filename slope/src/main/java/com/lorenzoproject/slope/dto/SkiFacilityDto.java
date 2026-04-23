@@ -1,7 +1,6 @@
 package com.lorenzoproject.slope.dto;
 
 import com.lorenzoproject.slope.enums.Status;
-import com.lorenzoproject.slope.model.Image;
 import com.lorenzoproject.slope.model.LiftStructure;
 import com.lorenzoproject.slope.model.SkiRun;
 import lombok.Data;

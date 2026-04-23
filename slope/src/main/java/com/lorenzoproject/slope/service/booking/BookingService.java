@@ -4,6 +4,8 @@ import com.lorenzoproject.slope.dto.BookingDto;
 import com.lorenzoproject.slope.dto.ImageDto;
 import com.lorenzoproject.slope.dto.OrderDto;
 import com.lorenzoproject.slope.enums.BookingStatus;
+import com.lorenzoproject.slope.enums.InsuranceCoverageStatus;
+import com.lorenzoproject.slope.enums.InsuranceStatus;
 import com.lorenzoproject.slope.exceptions.BookingNotFoundException;
 import com.lorenzoproject.slope.exceptions.ResourceNotFoundException;
 import com.lorenzoproject.slope.exceptions.SkiFacilityNotFoundException;
@@ -70,8 +72,8 @@ public class BookingService implements IBookingService{
                 Insurance insurance = new Insurance();
                 insurance.setBookingParticipant(participant);
                 insurance.setPrice(BigDecimal.valueOf(10));
-                insurance.setCoverageType("STANDARD");
-                insurance.setStatus("ACTIVE");
+                insurance.setCoverageType(InsuranceCoverageStatus.FULL);
+                insurance.setStatus(InsuranceStatus.ACTIVE);
 
                 participant.setInsurance(insurance);
 

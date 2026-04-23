@@ -28,6 +28,7 @@ public class Booking {
     private LocalDateTime bookingDate;
     @Enumerated(EnumType.STRING)
     private BookingTypes type;
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
     private BigDecimal totalPrice;
 

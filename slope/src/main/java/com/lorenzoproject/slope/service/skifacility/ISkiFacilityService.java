@@ -25,6 +25,8 @@ public interface ISkiFacilityService {
 
     List<SkiFacility> getActiveFacilities();
 
+    List<SkiFacility> getFacilities();
+
     SkiFacility getFacilityForBooking(Long facilityId);
 
     SkiFacility getSkiFacilityById(Long id);
